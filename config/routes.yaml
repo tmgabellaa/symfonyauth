@@ -1,5 +1,12 @@
 app_register:
     path: /register
-    controller: App\Controller\UserController::index
+    controller: App\Controller\UserController::register
 app_login:
     path: /login
+    controller: App\Controller\UserController::login
+app_admin:
+    path: /admin
+    controller: App\Controller\AdminController::index
+app_logout:
+    path: /logout
+    controller: App\Controller\UserController::logout

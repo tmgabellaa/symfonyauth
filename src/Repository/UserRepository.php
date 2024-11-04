@@ -18,16 +18,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function register(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, string $name,string $email, string $password)
+    public function register(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, string $name, string $email, string $password)
     {
         $user = (new User())
             ->setName($name)
-            ->setEmail($email)
-        ;
+            ->setEmail($email);
         $user->setPassword($passwordHasher->hashPassword($user, $password));
 
         $entityManager->persist($user);
         $entityManager->flush();
+    }
+
+    public function login(string $email, string $password, UserPasswordHasherInterface $passwordHasher): ?User
+    {
+        $user = $this->findOneBy(['email' => $email]);
+
+        if ($user && $passwordHasher->isPasswordValid($user, $password)) {
+            return $user;
+        } else {
+            return null;
+        }
     }
 
 }
